@@ -1,0 +1,195 @@
+{
+	"info": {
+		"_postman_id": "062f5ddd-5532-434c-821a-f4b815ccf26d",
+		"name": "OAuth2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "access_token",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "secret",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "SampleClientId",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "mike",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8081/auth/oauth/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"auth",
+						"oauth",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user/me",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "secret",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "SampleClientId",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "mike",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8081/auth/user/me?access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJtaWtlIiwic2NvcGUiOlsidXNlcl9pbmZvIl0sIm9yZ2FuaXphdGlvbiI6Im1pa2UtTWxPTSIsImV4cCI6MTU1NzEyODg2OCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiIyZWYxNzVkMy1jZGVjLTQ0NGUtYjBlMy1iYmJhZThlNTYzODgiLCJjbGllbnRfaWQiOiJTYW1wbGVDbGllbnRJZCJ9.VAiXKnSKo88mfOWrL2UH-ZcbKwa4osZfkLp6qFluIyk",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"auth",
+						"user",
+						"me"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJtaWtlIiwic2NvcGUiOlsidXNlcl9pbmZvIl0sIm9yZ2FuaXphdGlvbiI6Im1pa2UtTWxPTSIsImV4cCI6MTU1NzEyODg2OCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiIyZWYxNzVkMy1jZGVjLTQ0NGUtYjBlMy1iYmJhZThlNTYzODgiLCJjbGllbnRfaWQiOiJTYW1wbGVDbGllbnRJZCJ9.VAiXKnSKo88mfOWrL2UH-ZcbKwa4osZfkLp6qFluIyk"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user/extra",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "secret",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "SampleClientId",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "mike",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8081/auth/user/extra?access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJtaWtlIiwic2NvcGUiOlsidXNlcl9pbmZvIl0sIm9yZ2FuaXphdGlvbiI6Im1pa2UtTWxPTSIsImV4cCI6MTU1NzEyODg2OCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiIyZWYxNzVkMy1jZGVjLTQ0NGUtYjBlMy1iYmJhZThlNTYzODgiLCJjbGllbnRfaWQiOiJTYW1wbGVDbGllbnRJZCJ9.VAiXKnSKo88mfOWrL2UH-ZcbKwa4osZfkLp6qFluIyk",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"auth",
+						"user",
+						"extra"
+					],
+					"query": [
+						{
+							"key": "access_token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJtaWtlIiwic2NvcGUiOlsidXNlcl9pbmZvIl0sIm9yZ2FuaXphdGlvbiI6Im1pa2UtTWxPTSIsImV4cCI6MTU1NzEyODg2OCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiIyZWYxNzVkMy1jZGVjLTQ0NGUtYjBlMy1iYmJhZThlNTYzODgiLCJjbGllbnRfaWQiOiJTYW1wbGVDbGllbnRJZCJ9.VAiXKnSKo88mfOWrL2UH-ZcbKwa4osZfkLp6qFluIyk"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
