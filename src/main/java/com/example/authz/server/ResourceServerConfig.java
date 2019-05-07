@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
-	
+
 	@Autowired
 	DefaultTokenServices tokenServices;
 
@@ -18,5 +18,15 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	public void configure(ResourceServerSecurityConfigurer config) {
 		config.tokenServices(tokenServices);
 	}
+
+//	@Override
+//	public void configure(final HttpSecurity http) throws Exception {
+//
+//		http
+//			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+//			.and()
+//			.authorizeRequests().anyRequest().permitAll();
+//
+//	}
 
 }

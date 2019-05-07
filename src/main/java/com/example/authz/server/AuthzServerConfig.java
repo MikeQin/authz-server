@@ -33,6 +33,9 @@ public class AuthzServerConfig extends AuthorizationServerConfigurerAdapter {
     @Autowired
     private CustomAccessTokenConverter customAccessTokenConverter;
     
+    @Autowired
+    UserService userService;
+    
     /**
      * ======================== New =========================================
      */
@@ -45,7 +48,8 @@ public class AuthzServerConfig extends AuthorizationServerConfigurerAdapter {
         
         endpoints.tokenStore(tokenStore())
                  .tokenEnhancer(tokenEnhancerChain)
-                 .authenticationManager(authenticationManager);
+                 .authenticationManager(authenticationManager)
+                 .userDetailsService(userService);
     }
     
     @Bean
@@ -95,8 +99,8 @@ public class AuthzServerConfig extends AuthorizationServerConfigurerAdapter {
         clients.inMemory()
           .withClient("SampleClientId")
           .secret(passwordEncoder.encode("secret"))
-          .authorizedGrantTypes("password", "authorization_code", "refresh_token") // 
-          .scopes("user_info")
+          .authorizedGrantTypes("password", "authorization_code", "refresh_token", "client_credentials") // 
+          .scopes("read", "user_info", "write")
           .autoApprove(true) 
           .redirectUris(
         		  "http://localhost:8080/login",
