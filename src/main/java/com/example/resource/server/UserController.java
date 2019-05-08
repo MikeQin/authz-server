@@ -52,8 +52,6 @@ public class UserController {
 			
 			log.info(auth.toString());
 		}
-		
-		ResponseEntity.ok(auth);
 
 		return ResponseEntity.ok(auth);
 	}
