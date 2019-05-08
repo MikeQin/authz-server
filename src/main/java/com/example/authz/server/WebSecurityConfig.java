@@ -22,8 +22,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// Permit All
 		.requestMatchers()
 		.antMatchers("/login", "/oauth/authorize")
-		.antMatchers("/oauth/token/revokeById/**")
-		.antMatchers("/tokens/**")
+		//.antMatchers("/oauth/token/revokeById/**")
+		//.antMatchers("/tokens/**")
 		// Authentication for All except for the above
 		.and().authorizeRequests().anyRequest().authenticated()
 		// Form Login is allowed
@@ -44,9 +44,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.inMemoryAuthentication()
-		.withUser("john").password(passwordEncoder().encode("123")).roles("USER")
-		.and()
-		.withUser("mike").password(passwordEncoder().encode("123")).roles("USER", "ADMIN");
+		  .withUser("john").password(passwordEncoder().encode("123")).roles("USER").and()
+		  .withUser("mike").password(passwordEncoder().encode("123")).roles("ADMIN", "USER").and()
+		  .withUser("user1").password(passwordEncoder().encode("pass")).roles("USER").and()
+		  .withUser("admin").password(passwordEncoder().encode("nimda")).roles("ADMIN");
 	}
 
 	@Bean

@@ -1,6 +1,8 @@
 package com.example.authz.server;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,12 +15,14 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.approval.Approval;
+import org.springframework.security.oauth2.provider.approval.Approval.ApprovalStatus;
+import org.springframework.security.oauth2.provider.approval.InMemoryApprovalStore;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 @Configuration
 @EnableAuthorizationServer
@@ -47,6 +51,7 @@ public class AuthzServerConfig extends AuthorizationServerConfigurerAdapter {
         tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
         
         endpoints.tokenStore(tokenStore())
+        		 //.accessTokenConverter(accessTokenConverter())
                  .tokenEnhancer(tokenEnhancerChain)
                  .authenticationManager(authenticationManager)
                  .userDetailsService(userService);
@@ -59,15 +64,30 @@ public class AuthzServerConfig extends AuthorizationServerConfigurerAdapter {
     
     @Bean
     public TokenStore tokenStore() {
-        return new JwtTokenStore(accessTokenConverter());
+    	InMemoryJwtTokenStore store = new InMemoryJwtTokenStore(accessTokenConverter());      
+    	
+    	InMemoryApprovalStore approvalStore = new InMemoryApprovalStore();
+    	// Approval only supports a single scope, which is a bug.
+    	// It should support multiple scopes. The workaround is to create multiple Approvals
+    	Approval approvalWrite = new Approval("mike", "SampleClientId", "write", 1000*60*60*24, ApprovalStatus.APPROVED);
+    	Approval approvalRead = new Approval("mike", "SampleClientId", "read", 1000*60*60*24, ApprovalStatus.APPROVED);
+    	List<Approval> approvalList = new ArrayList<>();
+    	approvalList.add(approvalWrite);
+    	approvalList.add(approvalRead);
+    	approvalStore.addApprovals(approvalList);
+    	
+    	store.setApprovalStore(approvalStore);
+    	
+    	return store;
     }
  
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
-    	
+    	String signingKey = "symmetricSigningKey123";
         final JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
         converter.setAccessTokenConverter(customAccessTokenConverter);
-        converter.setSigningKey("symmetricSigningKey123");
+        converter.setSigningKey(signingKey); // authz server
+        converter.setVerifierKey(signingKey); // resource server
         
         return converter;
     }
@@ -75,9 +95,11 @@ public class AuthzServerConfig extends AuthorizationServerConfigurerAdapter {
     @Bean
     @Primary
     public DefaultTokenServices tokenServices() {
-        DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+        
+    	DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
         defaultTokenServices.setTokenStore(tokenStore());
         defaultTokenServices.setSupportRefreshToken(true);
+        
         return defaultTokenServices;
     }
     
@@ -105,7 +127,8 @@ public class AuthzServerConfig extends AuthorizationServerConfigurerAdapter {
           .redirectUris(
         		  "http://localhost:8080/login",
         		  "http://www.example.com/")
-          .accessTokenValiditySeconds(3600) // 1 hour
+          .accessTokenValiditySeconds(60 * 60) // 1 hour
+          .refreshTokenValiditySeconds(60 * 60 * 24) // 24 hours
           //----------------------------------------------------------
           .and()
           .withClient("sampleClientId")
