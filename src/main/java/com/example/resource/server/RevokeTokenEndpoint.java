@@ -1,4 +1,4 @@
-package com.example.authz.server;
+package com.example.resource.server;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

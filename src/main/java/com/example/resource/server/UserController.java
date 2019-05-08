@@ -1,4 +1,4 @@
-package com.example.authz.server;
+package com.example.resource.server;
 
 import java.security.Principal;
 import java.util.Map;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.authz.annotation.IsAdmin;
 import com.example.authz.annotation.IsReader;
+import com.example.authz.server.UserService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -91,6 +92,9 @@ public class UserController {
 	@GetMapping(path = "/user/details")
 	public @ResponseBody ResponseEntity<UserDetails> getUserDetails(Authentication auth) {
 		
+		// Note, that userService dependency should be removed here. 
+		// Instead, getUserDetails from Authz Server endpoints.
+		// Here we use it for demo purpose only
 		UserDetails ud = userService.loadUserByUsername(auth.getName());
 		
 		return ResponseEntity.ok(ud);

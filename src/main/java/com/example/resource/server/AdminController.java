@@ -1,9 +1,9 @@
-package com.example.authz.server;
+package com.example.resource.server;
 
-import static com.example.authz.server.Message.ACCESS_TOKEN;
-import static com.example.authz.server.Message.ACTION_REVOKE;
-import static com.example.authz.server.Message.REFRESH_TOKEN;
-import static com.example.authz.server.Message.STATUS_500;
+import static com.example.resource.server.Message.ACCESS_TOKEN;
+import static com.example.resource.server.Message.ACTION_REVOKE;
+import static com.example.resource.server.Message.REFRESH_TOKEN;
+import static com.example.resource.server.Message.STATUS_500;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.authz.annotation.IsWriter;
+import com.example.authz.server.InMemoryJwtTokenStore;
 
 import lombok.extern.slf4j.Slf4j;
 
