@@ -43,108 +43,125 @@ public class AdminController {
 
 	/**
 	 * Path: /tokens/{token:.*}
+	 * 
 	 * @param token
 	 * @param request
 	 * @return
 	 */
 	@IsWriter
 	@DeleteMapping(path = "/tokens/{token:.*}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public @ResponseBody ResponseEntity<Message> revokeAccessToken(@PathVariable String token, HttpServletRequest request) {
+	public @ResponseBody ResponseEntity<Message> revokeAccessToken(@PathVariable String token,
+			HttpServletRequest request) {
 
 		String authorization = request.getHeader("Authorization");
 		if (authorization != null && authorization.contains("Bearer")) {
 			String extractedTokenId = authorization.substring("Bearer".length() + 1);
-			//status += tokenServices.revokeToken(tokenId);
+			// tokenServices.revokeToken(tokenId);
 			log.info("[*] extractedTokenId {}", extractedTokenId);
 		}
-		
-		tokenServices.revokeToken(token);
-		
+
 		Message message = new Message(ACCESS_TOKEN, token, ACTION_REVOKE);
+		try {
+			tokenServices.revokeToken(token);
+		} catch (Exception e) {
+			message.setStatus(STATUS_500);
+			message.setError(e.getMessage());
+			
+			return ResponseEntity.status(500).body(message);
+		}
+
 		log.info("[*] {}", message);
-		
+
 		return ResponseEntity.ok(message);
 	}
-	
+
 	/**
 	 * Path: /tokens/refresh/{token:.*}
+	 * 
 	 * @param token
 	 * @param request
 	 * @return
 	 */
 	@IsWriter
 	@DeleteMapping(path = "/tokens/refresh/{token:.*}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public @ResponseBody ResponseEntity<Message> revokeRefreshToken(@PathVariable String token, OAuth2Authentication auth) {
-		
+	public @ResponseBody ResponseEntity<Message> revokeRefreshToken(@PathVariable String token,
+			OAuth2Authentication auth) {
+
 		log.info("[x] auth scope: {}", auth.getOAuth2Request().getScope());
-		
+
 		OAuth2RefreshToken refreshToken = tokenStore.readRefreshToken(token);
-		
+
 		Message message = new Message(REFRESH_TOKEN, token, ACTION_REVOKE);
-		
+
 		try {
 			tokenStore.removeRefreshToken(refreshToken);
 		} catch (Exception e) {
 			message.setStatus(STATUS_500);
 			message.setError(e.getMessage());
+			
+			return ResponseEntity.status(500).body(message);
 		}
-		
+
 		log.info("[*] {}", message);
-		
+
 		return ResponseEntity.ok(message);
-	}	
+	}
 
 	/**
 	 * Path: /tokens
+	 * 
 	 * @return
 	 */
 	@GetMapping(path = "/tokens", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public @ResponseBody ResponseEntity<List<String>> getTokens() {
 		List<String> tokenValues = new ArrayList<>();
 		Collection<OAuth2AccessToken> tokens = tokenStore.findTokensByClientId("SampleClientId");
-		
+
 		log.info("tokens: " + tokens);
-		
+
 		if (tokens != null) {
 			for (OAuth2AccessToken token : tokens) {
 				tokenValues.add(token.getValue());
 			}
 		}
-		
+
 		return ResponseEntity.ok(tokenValues);
 	}
-	
+
 	/**
 	 * Path: /tokens/refresh
+	 * 
 	 * @return
 	 */
 	@GetMapping(path = "/tokens/refresh", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public @ResponseBody ResponseEntity<List<String>> getRefreshTokens() {
 		List<String> tokenValues = new ArrayList<>();
-		Collection<OAuth2RefreshToken> tokens = ((InMemoryJwtTokenStore)tokenStore).findRefreshTokensByClientId("SampleClientId");
-		
+		Collection<OAuth2RefreshToken> tokens = ((InMemoryJwtTokenStore) tokenStore)
+				.findRefreshTokensByClientId("SampleClientId");
+
 		log.info("refresh_tokens: " + tokens);
-		
+
 		if (tokens != null) {
 			for (OAuth2RefreshToken token : tokens) {
 				tokenValues.add(token.getValue());
 			}
 		}
-		
+
 		return ResponseEntity.ok(tokenValues);
 	}
-	
+
 	/**
 	 * Path: /echo
+	 * 
 	 * @param auth
 	 * @return
 	 */
 	@IsWriter
 	@GetMapping(path = "/echo", produces = MediaType.TEXT_PLAIN_VALUE)
 	public @ResponseBody ResponseEntity<String> echo(Authentication auth) {
-		
+
 		String message = "Hello, " + auth.getName();
-		
+
 		return ResponseEntity.ok(message);
 	}
 }

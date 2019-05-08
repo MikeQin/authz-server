@@ -10,11 +10,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.authz.annotation.IsAdmin;
 import com.example.authz.annotation.IsReader;
+import com.example.authz.annotation.IsWriter;
 import com.example.authz.server.UserService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @RestController
 @Slf4j
+@RequestMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class UserController {
 	
 	@Autowired
@@ -38,8 +41,8 @@ public class UserController {
 	 * @param principal
 	 * @return
 	 */
-	@IsAdmin
-	@GetMapping(path = "/user/me", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@IsWriter
+	@GetMapping(path = "/user/me")
 	public @ResponseBody ResponseEntity<Authentication> user(Principal principal) {
 		
 		Authentication auth = null;
@@ -66,6 +69,7 @@ public class UserController {
 	public @ResponseBody ResponseEntity<Map<String, Object>> getExtraInfo(Authentication auth) {
 		
 		OAuth2AuthenticationDetails oauthDetails = (OAuth2AuthenticationDetails) auth.getDetails();
+		
 		@SuppressWarnings("unchecked")
 		Map<String, Object> details = (Map<String, Object>) oauthDetails.getDecodedDetails();
 		log.info("User organization is " + details.get("organization"));
