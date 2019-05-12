@@ -19,17 +19,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 
 		http
-		// Permit All
-		.requestMatchers()
-		.antMatchers("/login", "/oauth/authorize")
-		//.antMatchers("/oauth/token/revokeById/**")
-		//.antMatchers("/tokens/**")
-		// Authentication for All except for the above
-		.and().authorizeRequests().anyRequest().authenticated()
-		// Form Login is allowed
-		.and().formLogin().permitAll()
-		// Disable Cross Site Request Forgery Check
-		.and().csrf().disable();
+			// Permit All
+			.requestMatchers()
+			.antMatchers("/login", "/oauth/authorize")
+			// Authentication for All except for the above
+			.and().authorizeRequests().anyRequest().authenticated()
+			// Form Login is allowed
+			.and().formLogin().permitAll()
+			// Disable Cross Site Request Forgery Check
+			.and().csrf().disable();
 	}
 	
 	@Override
@@ -47,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		  .withUser("john").password(passwordEncoder().encode("123")).roles("USER").and()
 		  .withUser("mike").password(passwordEncoder().encode("123")).roles("ADMIN", "USER").and()
 		  .withUser("user1").password(passwordEncoder().encode("pass")).roles("USER").and()
-		  .withUser("admin").password(passwordEncoder().encode("nimda")).roles("ADMIN");
+		  .withUser("admin").password(passwordEncoder().encode("admin")).roles("ADMIN");
 	}
 
 	@Bean

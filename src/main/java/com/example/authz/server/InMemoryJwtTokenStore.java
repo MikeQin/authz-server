@@ -21,8 +21,7 @@ public class InMemoryJwtTokenStore extends JwtTokenStore {
 	Map<String, Collection<OAuth2RefreshToken>> refreshTokenStore = new HashMap<>();
 
 	public InMemoryJwtTokenStore(JwtAccessTokenConverter jwtTokenEnhancer) {
-		super(jwtTokenEnhancer);
-		
+		super(jwtTokenEnhancer);		
 	}
 
 	@Override

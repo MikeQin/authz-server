@@ -151,14 +151,16 @@ public class AdminController {
 	}
 
 	/**
-	 * Path: /echo
+	 * Path: /hello
 	 * 
 	 * @param auth
 	 * @return
 	 */
 	@IsWriter
-	@GetMapping(path = "/echo", produces = MediaType.TEXT_PLAIN_VALUE)
+	@GetMapping(path = "/hello", produces = MediaType.TEXT_PLAIN_VALUE)
 	public @ResponseBody ResponseEntity<String> echo(Authentication auth) {
+		
+		log.info("[*] enter /hello");
 
 		String message = "Hello, " + auth.getName();
 

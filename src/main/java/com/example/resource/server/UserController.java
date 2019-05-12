@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.authz.annotation.IsAdmin;
 import com.example.authz.annotation.IsReader;
-import com.example.authz.annotation.IsWriter;
 import com.example.authz.server.UserService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +40,7 @@ public class UserController {
 	 * @param principal
 	 * @return
 	 */
-	@IsWriter
+	@IsReader
 	@GetMapping(path = "/user/me")
 	public @ResponseBody ResponseEntity<Authentication> user(Principal principal) {
 		

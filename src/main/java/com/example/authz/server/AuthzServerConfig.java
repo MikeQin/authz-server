@@ -66,16 +66,15 @@ public class AuthzServerConfig extends AuthorizationServerConfigurerAdapter {
     public TokenStore tokenStore() {
     	InMemoryJwtTokenStore store = new InMemoryJwtTokenStore(accessTokenConverter());      
     	
-    	InMemoryApprovalStore approvalStore = new InMemoryApprovalStore();
     	// Approval only supports a single scope, which is a bug.
     	// It should support multiple scopes. The workaround is to create multiple Approvals
+    	InMemoryApprovalStore approvalStore = new InMemoryApprovalStore();
     	Approval approvalWrite = new Approval("mike", "SampleClientId", "write", 1000*60*60*24, ApprovalStatus.APPROVED);
     	Approval approvalRead = new Approval("mike", "SampleClientId", "read", 1000*60*60*24, ApprovalStatus.APPROVED);
     	List<Approval> approvalList = new ArrayList<>();
     	approvalList.add(approvalWrite);
     	approvalList.add(approvalRead);
-    	approvalStore.addApprovals(approvalList);
-    	
+    	approvalStore.addApprovals(approvalList); 	
     	store.setApprovalStore(approvalStore);
     	
     	return store;
@@ -121,12 +120,10 @@ public class AuthzServerConfig extends AuthorizationServerConfigurerAdapter {
         clients.inMemory()
           .withClient("SampleClientId")
           .secret(passwordEncoder.encode("secret"))
-          .authorizedGrantTypes("password", "authorization_code", "refresh_token", "client_credentials") // 
+          .authorizedGrantTypes("refresh_token", "authorization_code", "password", "client_credentials") // , "password", "client_credentials"
           .scopes("read", "user_info", "write")
           .autoApprove(true) 
-          .redirectUris(
-        		  "http://localhost:8080/login",
-        		  "http://www.example.com/")
+          .redirectUris("http://localhost:8080/login", "http://localhost:8080/secret", "http://localhost:8080/access_tokens")
           .accessTokenValiditySeconds(60 * 60) // 1 hour
           .refreshTokenValiditySeconds(60 * 60 * 24) // 24 hours
           //----------------------------------------------------------
