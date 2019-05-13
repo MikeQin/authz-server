@@ -1,4 +1,4 @@
-package com.example.resource.server;
+package com.example.authz.server;
 
 import java.security.Principal;
 import java.util.Map;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.authz.annotation.IsAdmin;
 import com.example.authz.annotation.IsReader;
-import com.example.authz.server.UserService;
 
 import lombok.extern.slf4j.Slf4j;
 

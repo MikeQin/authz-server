@@ -19,9 +19,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 
 		http
-			// Permit All
 			.requestMatchers()
-			.antMatchers("/login", "/oauth/authorize")
+			.antMatchers("/login**", "/oauth/authorize")
 			// Authentication for All except for the above
 			.and().authorizeRequests().anyRequest().authenticated()
 			// Form Login is allowed

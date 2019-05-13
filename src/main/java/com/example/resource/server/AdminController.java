@@ -1,9 +1,9 @@
 package com.example.resource.server;
 
-import static com.example.resource.server.Message.ACCESS_TOKEN;
-import static com.example.resource.server.Message.ACTION_REVOKE;
-import static com.example.resource.server.Message.REFRESH_TOKEN;
-import static com.example.resource.server.Message.STATUS_500;
+import static com.example.authz.server.Message.ACCESS_TOKEN;
+import static com.example.authz.server.Message.ACTION_REVOKE;
+import static com.example.authz.server.Message.REFRESH_TOKEN;
+import static com.example.authz.server.Message.STATUS_500;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,11 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,8 +25,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.authz.annotation.IsReader;
 import com.example.authz.annotation.IsWriter;
 import com.example.authz.server.InMemoryJwtTokenStore;
+import com.example.authz.server.Message;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminController {
 
 	@Autowired
-	DefaultTokenServices tokenServices;
+	ConsumerTokenServices tokenServices;
 
 	@Autowired
 	TokenStore tokenStore;
@@ -53,13 +54,16 @@ public class AdminController {
 	public @ResponseBody ResponseEntity<Message> revokeAccessToken(@PathVariable String token,
 			HttpServletRequest request) {
 
+		// Demo how to extract token from request header
 		String authorization = request.getHeader("Authorization");
 		if (authorization != null && authorization.contains("Bearer")) {
-			String extractedTokenId = authorization.substring("Bearer".length() + 1);
+			String extractedToken = authorization.substring("Bearer".length() + 1);
 			// tokenServices.revokeToken(tokenId);
-			log.info("[*] extractedTokenId {}", extractedTokenId);
-		}
+			log.info("[*] extractedTokenId {}", extractedToken);
+		} // End of Demo
 
+		// We delete the token passed in path variable, not from header.
+		// Since the deleted token might be different from Authorization header's token
 		Message message = new Message(ACCESS_TOKEN, token, ACTION_REVOKE);
 		try {
 			tokenServices.revokeToken(token);
@@ -79,7 +83,7 @@ public class AdminController {
 	 * Path: /tokens/refresh/{token:.*}
 	 * 
 	 * @param token
-	 * @param request
+	 * @param auth
 	 * @return
 	 */
 	@IsWriter
@@ -112,6 +116,7 @@ public class AdminController {
 	 * 
 	 * @return
 	 */
+	@IsReader
 	@GetMapping(path = "/tokens", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public @ResponseBody ResponseEntity<List<String>> getTokens() {
 		List<String> tokenValues = new ArrayList<>();
@@ -133,6 +138,7 @@ public class AdminController {
 	 * 
 	 * @return
 	 */
+	@IsReader
 	@GetMapping(path = "/tokens/refresh", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public @ResponseBody ResponseEntity<List<String>> getRefreshTokens() {
 		List<String> tokenValues = new ArrayList<>();
@@ -148,22 +154,5 @@ public class AdminController {
 		}
 
 		return ResponseEntity.ok(tokenValues);
-	}
-
-	/**
-	 * Path: /hello
-	 * 
-	 * @param auth
-	 * @return
-	 */
-	@IsWriter
-	@GetMapping(path = "/hello", produces = MediaType.TEXT_PLAIN_VALUE)
-	public @ResponseBody ResponseEntity<String> echo(Authentication auth) {
-		
-		log.info("[*] enter /hello");
-
-		String message = "Hello, " + auth.getName();
-
-		return ResponseEntity.ok(message);
 	}
 }

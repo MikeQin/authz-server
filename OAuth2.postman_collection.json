@@ -67,6 +67,57 @@
 			"response": []
 		},
 		{
+			"name": "access_token refresh",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "secret",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "SampleClientId",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "grant_type",
+							"value": "refresh_token",
+							"type": "text"
+						},
+						{
+							"key": "refresh_token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJtaWtlIiwic2NvcGUiOlsicmVhZCIsIndyaXRlIl0sIm9yZ2FuaXphdGlvbiI6Im1pa2UtV1BlWiIsImF0aSI6IjNiZGJjOWZkLWZhNTAtNDdiZi1iYTM4LTcxNDgzNzFjZDUwNiIsImV4cCI6MTU1NzgxODUyMCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiIyZjZkNjFhOC0yMjMwLTQ4YzYtYWI5Yy1jYTIyM2MxZmI4NWUiLCJjbGllbnRfaWQiOiJTYW1wbGVDbGllbnRJZCJ9.pSVdOjQd4zxtF7pWMRI2FFTW7FBkQVWyNfBGsEMAH24",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8081/auth/oauth/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"auth",
+						"oauth",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "access_token revoke",
 			"request": {
 				"auth": {

@@ -38,11 +38,7 @@ public class AuthzServerConfig extends AuthorizationServerConfigurerAdapter {
     private CustomAccessTokenConverter customAccessTokenConverter;
     
     @Autowired
-    UserService userService;
-    
-    /**
-     * ======================== New =========================================
-     */
+    private UserService userService;
     
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
@@ -101,10 +97,6 @@ public class AuthzServerConfig extends AuthorizationServerConfigurerAdapter {
         
         return defaultTokenServices;
     }
-    
-    /**
-     * ======================== Old =========================================
-     */
  
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
@@ -117,17 +109,21 @@ public class AuthzServerConfig extends AuthorizationServerConfigurerAdapter {
      */
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+    	// Use database for dynamic client registration
+    	//clients.jdbc(dataSource);
+    	
+    	// Use inMemory registration
         clients.inMemory()
           .withClient("SampleClientId")
           .secret(passwordEncoder.encode("secret"))
           .authorizedGrantTypes("refresh_token", "authorization_code", "password", "client_credentials") // , "password", "client_credentials"
-          .scopes("read", "user_info", "write")
-          .autoApprove(true) 
+          .scopes("read", "write")
+          .autoApprove(false) 
           .redirectUris("http://localhost:8080/login", "http://localhost:8080/secret", "http://localhost:8080/access_tokens")
           .accessTokenValiditySeconds(60 * 60) // 1 hour
-          .refreshTokenValiditySeconds(60 * 60 * 24) // 24 hours
-          //----------------------------------------------------------
-          .and()
+          .refreshTokenValiditySeconds(60 * 60 * 24); // 24 hours
+          //-----
+/*          .and()
           .withClient("sampleClientId")
           .authorizedGrantTypes("implicit")
           .scopes("read", "write", "foo", "bar")
@@ -154,7 +150,7 @@ public class AuthzServerConfig extends AuthorizationServerConfigurerAdapter {
           .authorizedGrantTypes("implicit")
           .scopes("read", "write", "foo", "bar")
           .autoApprove(true)
-          .redirectUris("http://www.example.com");
+          .redirectUris("http://www.example.com");*/
     }	
 
 }

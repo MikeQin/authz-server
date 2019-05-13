@@ -1,4 +1,4 @@
-package com.example.resource.server;
+package com.example.authz.server;
 
 import lombok.Data;
 
