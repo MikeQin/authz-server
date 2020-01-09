@@ -67,7 +67,7 @@ public class AdminController {
 	 * @return
 	 */
 	@IsWriter
-	@DeleteMapping(path = "/tokens/{token:.*}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@DeleteMapping(path = "/tokens/{token:.*}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<Message> revokeAccessToken(@PathVariable String token,
 			HttpServletRequest request) {
 
@@ -104,7 +104,7 @@ public class AdminController {
 	 * @return
 	 */
 	@IsWriter
-	@DeleteMapping(path = "/tokens/refresh/{token:.*}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@DeleteMapping(path = "/tokens/refresh/{token:.*}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<Message> revokeRefreshToken(@PathVariable String token,
 			OAuth2Authentication auth) {
 
@@ -134,7 +134,7 @@ public class AdminController {
 	 * @return
 	 */
 	@IsReader
-	@GetMapping(path = "/tokens", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@GetMapping(path = "/tokens", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<List<String>> getTokens() {
 		List<String> tokenValues = new ArrayList<>();
 		Collection<OAuth2AccessToken> tokens = tokenStore.findTokensByClientId("SampleClientId");
@@ -156,7 +156,7 @@ public class AdminController {
 	 * @return
 	 */
 	@IsReader
-	@GetMapping(path = "/tokens/refresh", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@GetMapping(path = "/tokens/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<List<String>> getRefreshTokens() {
 		List<String> tokenValues = new ArrayList<>();
 		Collection<OAuth2RefreshToken> tokens = ((InMemoryJwtTokenStore) tokenStore)
